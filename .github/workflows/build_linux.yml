@@ -14,10 +14,6 @@ on:
         description: 'Build mode: devel, nightly, testing, stable'
         default: devel
         type: string
-      dockwidgets_v2:
-        description: 'KDDockWidgets v2: ON/OFF'
-        default: 'OFF'
-        type: string
 
 permissions:
   contents: read
@@ -97,12 +93,6 @@ jobs:
           export CMAKE_CXX_FLAGS="\${CMAKE_CXX_FLAGS:-} ${CPU_FLAGS}"
           EOF
 
-          cat > build_overrides.cmake <<EOF
-          set(CMAKE_C_FLAGS "\${CMAKE_C_FLAGS} ${CPU_FLAGS}" CACHE STRING "" FORCE)
-          set(CMAKE_CXX_FLAGS "\${CMAKE_CXX_FLAGS} ${CPU_FLAGS}" CACHE STRING "" FORCE)
-          set(MUSE_COMPILE_USE_UNITY OFF CACHE BOOL "" FORCE)
-          EOF
-
       - name: Generate _en.ts files
         env:
           LUPDATE_ARGS: ''
@@ -121,10 +111,8 @@ jobs:
         run: |
           bash ./buildscripts/ci/linux/build.sh \
             -n "${{ env.BUILD_NUMBER }}" \
-            --crash_log_url '' \
             --arch x86_64 \
-            --build-pipewire \
-            --dockwidgets_v2 ${{ inputs.dockwidgets_v2 == 'ON' && 'ON' || 'OFF' }}
+            --build-pipewire
 
       - name: Show ccache stats
         if: always()
