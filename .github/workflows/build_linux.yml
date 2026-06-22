@@ -27,7 +27,9 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-24.04
+    # MuseScore AppImage packaging expects OpenSSL 1.1 (libssl.so.1.1), which is
+    # available on 22.04 but not on 24.04. Upstream linux_x64 CI uses 22.04.
+    runs-on: ubuntu-22.04
     timeout-minutes: 180
 
     steps:
@@ -59,8 +61,8 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: ${{ github.workspace }}/.ccache
-          key: ${{ runner.os }}-x86_64-ccache-
-          restore-keys: ${{ runner.os }}-x86_64-ccache-
+          key: ubuntu-22.04-x86_64-ccache-
+          restore-keys: ubuntu-22.04-x86_64-ccache-
 
       - name: Setup ccache
         run: |
